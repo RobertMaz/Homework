@@ -11,11 +11,32 @@ public class Main {
     public static int mapSize;
     public static char[][] map;
     public static Scanner scanner = new Scanner(System.in);
-    public static int test;
 
+    public static void main(String[] args) {
+        newGame();
 
+        while (true) {
+            humanTurn();
+            if (isEndGame(DOT_HUMAN)) break;
 
-    public static void initialMap(){
+            countForGame();
+            if (isEndGame(DOT_COMPUTER)) break;
+        }
+
+    }
+
+    public static void newGame() {
+        System.out.println("Введите размерность поля: ");
+        mapSize = scanner.nextInt();
+        System.out.println("Введите какое количество фишек необходимо для выигрыша: ");
+        checkWinCount = scanner.nextInt();
+
+        map = new char[mapSize][mapSize];
+        initialMap();
+        printGameMap();
+    }
+
+    public static void initialMap() {
         for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map.length; x++) {
                 map[y][x] = DOT_EMPTY;
@@ -31,34 +52,11 @@ public class Main {
 
         for (int y = 0; y < map.length; y++) {
             System.out.print(y + 1 + " ");
-            for (int i = 0; i < map.length; i++) {
-                System.out.print(map[y][i] + " ");
+            for (int x = 0; x < map.length; x++) {
+                System.out.print(map[y][x] + " ");
             }
             System.out.println();
         }
-    }
-
-    public static void main(String[] args) {
-        newGame();
-
-        while (true) {
-            humanTurn();
-            if (isEndGame(DOT_HUMAN)) break;
-
-            countForGame();
-            if (isEndGame(DOT_COMPUTER)) break;
-        }
-
-    }
-    public static void newGame(){
-        System.out.println("Введите размерность поля: ");
-        mapSize = scanner.nextInt();
-        System.out.println("Введите какое количество фишек необходимо для выигрыша: ");
-        checkWinCount = scanner.nextInt();
-
-        map = new char[mapSize][mapSize];
-        initialMap();
-        printGameMap();
     }
 
     public static void humanTurn() {
@@ -67,29 +65,30 @@ public class Main {
             System.out.println("Введите координаты вашего хода через пробел: ");
             x = scanner.nextInt() - 1;
             y = scanner.nextInt() - 1;
-        } while (isNotCorrect(x , y));
+        } while (isNotCorrect(x, y));
         map[y][x] = DOT_HUMAN;
         printGameMap();
     }
 
     public static boolean isEndGame(char symbol) {
+        boolean result = false;
         if (isCheckWin(symbol)) {
             System.out.println("Игра окончена. Выиграл: " + symbol);
-            return true;
+            result = true;
         }
-        if (isMapFull()) {
+        else if (isMapFull()) {
             System.out.println("Ничья");
-            return true;
+            result =  true;
         }
-        return false;
+        return result;
     }
-
 
     public static boolean isCheckWin(char symbol) {
         int sizeLineUp = 0;
         int sizeLineRight = 0;
         int diagonalCheckCount1 = 0;
         int diagonalCheckCount2 = 0;
+
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
 
@@ -105,74 +104,26 @@ public class Main {
 
                     if (map[map.length - j - 1][j] == symbol) diagonalCheckCount2++;
                     else diagonalCheckCount2 = 0;
-
-                    if (diagonalCheckCount1 == checkWinCount || diagonalCheckCount2 == checkWinCount
-                            || sizeLineRight == checkWinCount || sizeLineUp == checkWinCount) return true;
                 }
+                if (diagonalCheckCount1 == checkWinCount || diagonalCheckCount2 == checkWinCount
+                        || sizeLineRight == checkWinCount || sizeLineUp == checkWinCount) return true;
             }
         }
         return false;
     }
 
-    public static boolean isMapFull(){
-        for (int i = 0; i < map.length; i++) {
+    public static boolean isMapFull() {
+        for (char[] chars : map) {
             for (int j = 0; j < map.length; j++) {
-                if (map[i][j] == DOT_EMPTY) return false;
+                if (chars[j] == DOT_EMPTY) return false;
             }
         }
         return true;
     }
 
-    public static void computerTurn(){  //stupid
-        int x, y;
-        do {
-            x = (int)(Math.random() * (map.length));
-            y = (int)(Math.random() * (map.length));
-        } while (isNotCorrect(x, y));
-        map[x][y] = DOT_COMPUTER;
-        System.out.println("Компьютер сделал свой ход: " + (x + 1) + " " + (y + 1));
-        printGameMap();
-    }
-
-//    public static boolean isCorrectGood(int x, int y){
-//        if (!isNotCorrect(y,x)) {
-//            map[x][y] = DOT_COMPUTER;
-//            forBreak = 0;
-//            return true;
-//        }
-//        else return false;
-//    }
-//    public static void intellectComputerTurn(){
-//        int x, y;
-//        int count = 0;
-//        int max = 0;
-//        for (int i = 0; i < map.length; i++) {
-//            for (int j = 0; j < map.length; j++) {
-//                if (map[i][j] == DOT_HUMAN) {
-//                    if (isCorrectGood(i, j + 1)) break;
-//                    if (isCorrectGood(i - 1, j + 1)) break;
-//                    if (isCorrectGood(i - 1, j )) break;
-//                    if (isCorrectGood(i + 1, j )) break;
-//                    if (isCorrectGood(i + 1, j - 1)) break;
-//                    if (isCorrectGood(i , j - 1)) break;
-//                    if (isCorrectGood(i - 1, j - 1)) break;
-//                    if (isCorrectGood(i + 1, j + 1)) break;
-//
-//                }
-//            }
-//            if (forBreak == 0) {
-//                System.out.println("Компьютер сделал свой ход: ");
-//                printGameMap();
-//                forBreak = 1;
-//                break;
-//            }
-//        }
-//    }
-
-    public static boolean isNotCorrect(int x,int y) {
+    public static boolean isNotCorrect(int x, int y) {
         if (x >= mapSize || x < 0 || y >= mapSize || y < 0) return true;
-        if (map[y][x] == DOT_EMPTY) return false;
-        else return true;
+        return map[y][x] != DOT_EMPTY;
     }
 
     public static void countForGame() { //по линиям
@@ -181,10 +132,10 @@ public class Main {
         int y = 0;
         int max = 0;
         int point = 0;
+
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
-                if (map[i][j] == DOT_EMPTY)
-                {
+                if (map[j][i] == DOT_EMPTY) {
                     if (checkPoint(i, j + 1)) // вверх
                     {
                         point++;
@@ -218,8 +169,8 @@ public class Main {
                         point++;
                     }
                 }
-                if (point > max)
-                {
+
+                if (point > max) {
                     y = j;
                     x = i;
                     max = point;
@@ -228,12 +179,12 @@ public class Main {
                 point = 0;
             }
         }
-        if (!result)
-        {
+
+        if (!result) {
             do {
-                x = (int)(Math.random() * (map.length));
-                y = (int)(Math.random() * (map.length));
-            } while (isNotCorrect(x, y));
+                x = (int) (Math.random() * (map.length));
+                y = (int) (Math.random() * (map.length));
+            } while (isNotCorrect(y, x));
         }
         map[y][x] = DOT_COMPUTER;
         System.out.println("Компьютер сделал свой ход: " + (y + 1) + " " + (x + 1));
@@ -242,13 +193,7 @@ public class Main {
 
     public static boolean checkPoint(int x, int y) {
         boolean result = false;
-        if (x >= mapSize || x < 0 || y >= mapSize || y < 0)
-            result =  false;
-        else if (map[y][x] == DOT_EMPTY)
-            result = true;
-
+        if (!(x >= mapSize || x < 0 || y >= mapSize || y < 0) &&(map[y][x] == DOT_COMPUTER)) result = true;
         return result;
     }
-
-
 }
