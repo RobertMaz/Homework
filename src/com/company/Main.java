@@ -11,7 +11,7 @@ public class Main {
     public static int mapSize;
     public static char[][] map;
     public static Scanner scanner = new Scanner(System.in);
-    public static int forBreak = 1;
+    public static int test;
 
 
 
@@ -134,14 +134,14 @@ public class Main {
         printGameMap();
     }
 
-    public static boolean isCorrectGood(int x, int y){
-        if (!isNotCorrect(y,x)) {
-            map[x][y] = DOT_COMPUTER;
-            forBreak = 0;
-            return true;
-        }
-        else return false;
-    }
+//    public static boolean isCorrectGood(int x, int y){
+//        if (!isNotCorrect(y,x)) {
+//            map[x][y] = DOT_COMPUTER;
+//            forBreak = 0;
+//            return true;
+//        }
+//        else return false;
+//    }
 //    public static void intellectComputerTurn(){
 //        int x, y;
 //        int count = 0;
