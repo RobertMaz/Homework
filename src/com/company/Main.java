@@ -11,6 +11,7 @@ public class Main {
     public static int mapSize;
     public static char[][] map;
     public static Scanner scanner = new Scanner(System.in);
+    public static int test;
 
 
 
